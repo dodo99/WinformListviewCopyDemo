@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -49,26 +50,45 @@ namespace WinformListviewCopyDemo
 
             for (int i = 0; i <= array2d.GetUpperBound(0); i++)
             {
-                listView1.Items.Add(new ListViewItem((new CustomArray<string>()).GetRow(array2d, i)));
+                //listView1.Items.Add(new ListViewItem((new MyArray<string>()).GetRow(array2d, i)));
+                listView1.Items.Add(new ListViewItem(array2d.GetRow(i)));
             }
 
         }
     }
 
-    public class CustomArray<T>
+    //public class MyArray<T>
+    //{
+    //    public T[] GetColumn(T[,] matrix, int columnNumber)
+    //    {
+    //        return Enumerable.Range(0, matrix.GetUpperBound(1))
+    //                .Select(x => matrix[x, columnNumber])
+    //                .ToArray();
+    //    }
+
+    //    public T[] GetRow(T[,] matrix, int rowNumber)
+    //    {
+    //        return Enumerable.Range(0, matrix.GetUpperBound(0))
+    //                .Select(x => matrix[rowNumber, x])
+    //                .ToArray();
+    //    }
+    //}
+
+    public static class ArrayExt
     {
-        public T[] GetColumn(T[,] matrix, int columnNumber)
+        public static T[] GetRow<T>(this T[,] matrix, int rowNumber)
         {
-            return Enumerable.Range(0, matrix.GetLength(0))
+            return Enumerable.Range(0, matrix.GetUpperBound(0))
+                    .Select(x => matrix[rowNumber, x])
+                    .ToArray();
+        }
+
+        public static T[] GetColumn<T>(this T[,] matrix, int columnNumber)
+        {
+            return Enumerable.Range(0, matrix.GetUpperBound(1))
                     .Select(x => matrix[x, columnNumber])
                     .ToArray();
         }
 
-        public T[] GetRow(T[,] matrix, int rowNumber)
-        {
-            return Enumerable.Range(0, matrix.GetLength(1))
-                    .Select(x => matrix[rowNumber, x])
-                    .ToArray();
-        }
     }
 }
